@@ -1,0 +1,13 @@
+type AuthenInfo {
+  token: String,
+  id: ID,
+  status: Int
+}
+
+type Query{
+  login(logInfo: LogInfo): AuthenInfo
+}
+
+type Mutation{
+  createUser(user: CreateUserDto): User
+}

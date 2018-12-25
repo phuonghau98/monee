@@ -1,0 +1,39 @@
+type User{
+  id: ID
+  name: String
+  usn: String
+  pwd: String
+  accounts: Accounts
+  status: Int
+}
+type Accounts{
+    bank: Float
+    cc: Float
+    cash: Float
+}
+input ModifyAccountsPayload{
+    bank: Float
+    cc: Float
+    cash: Float
+}
+input CreateUserDto{
+  name: String
+  usn: String
+  pwd: String
+}
+input LogInfo {
+  usn: String
+  pwd: String
+}
+
+type Query{
+  getUser(id: String): User
+}
+
+type Mutation{
+  modifyAccounts(id:String, code: String, amount: Float, isIncrease: Boolean): Accounts
+}
+
+type Subscription{
+  accountsModified(userId: ID!): Accounts
+}

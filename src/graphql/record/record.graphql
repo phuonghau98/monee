@@ -1,0 +1,38 @@
+type Record{
+  id: ID
+  belongsTo: ID
+  tag: String
+  date: String
+  method: String
+  description: [Description]
+  amount: Float
+}
+type Description{
+  content: String
+  date: String
+}
+type StaticsByTime{
+  today: Float
+  thisMonth: Float
+  lastMonth: Float
+}
+input InputRecord{
+  belongsTo: ID
+  tag: String
+  method: String
+  description: String
+  amount: Float
+}
+type Query{
+  getRecordByUserId(userId: ID): [Record]
+  recordsStaticByDate(userId: ID): StaticsByTime
+}
+
+type Mutation{
+  editDescription(recordId: ID, userId: ID): Record
+  createRecord(record: InputRecord): Record
+}
+
+type Subscription{
+  recordCreated: Record
+}
