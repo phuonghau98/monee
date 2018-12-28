@@ -1,5 +1,5 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { GQLAuthService } from './auth.service';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql'
+import { GQLAuthService } from './auth.service'
 
 @Resolver('Auth')
 export class GQLAuthResolver {
@@ -13,7 +13,7 @@ export class GQLAuthResolver {
   }
 
   @Mutation()
-  async createUser(@Args('user') user){
+  async createUser(@Args('user') user) {
     return await this.authService.createUser(user)
   }
 

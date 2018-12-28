@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ACCOUNT_TYPE_COLOR } from '../../redux/constants'
+import { ACCOUNT_TYPE_COLOR } from '../constants'
 import { MUTATE_ACCOUNTS } from '../../apollo/graphq.mutate'
 import { withApollo } from 'react-apollo'
 class UpdownModal extends Component {

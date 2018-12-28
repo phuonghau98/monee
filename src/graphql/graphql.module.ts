@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { join } from 'path'
-import { RecordModule } from './record/record.module';
-import { UserModule } from './user/user.module';
-import { GQLAuthModule } from './auth/auth.module';
+import { RecordModule } from './record/record.module'
+import { UserModule } from './user/user.module'
+import { GQLAuthModule } from './auth/auth.module'
 @Module({
   imports: [
     GraphQLModule.forRoot({

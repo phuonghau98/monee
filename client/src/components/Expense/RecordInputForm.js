@@ -73,7 +73,7 @@ class RecordInputForm extends Component {
                 .then(result => {
                   console.log(result)
                 })
-              const prevOverviews = this.props.client.readQuery({ query: GET_OVERVIEW, variables: { userId: this.userId } }).overviews
+              const prevOverviews = this.props.client.readQuery({ query: GET_OVERVIEW, variables: { userId: this.userId } }).overviews || []
               const nextOverviews = { ...prevOverviews, today: prevOverviews.today + this.state.amount, thisMonth: prevOverviews.thisMonth + this.state.amount }
               this.props.client.writeQuery({ query: GET_OVERVIEW, variables: { userId: this.userId }, data: { overviews: nextOverviews } })
               this.resetForm(description, amount)

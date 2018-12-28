@@ -1,4 +1,4 @@
-type User{
+type User {
   id: ID
   name: String
   usn: String
@@ -6,17 +6,17 @@ type User{
   accounts: Accounts
   status: Int
 }
-type Accounts{
+type Accounts {
     bank: Float
     cc: Float
     cash: Float
 }
-input ModifyAccountsPayload{
+input ModifyAccountsPayload {
     bank: Float
     cc: Float
     cash: Float
 }
-input CreateUserDto{
+input CreateUserDto {
   name: String
   usn: String
   pwd: String
@@ -26,14 +26,14 @@ input LogInfo {
   pwd: String
 }
 
-type Query{
-  getUser(id: String): User
+type Query {
+  getUser (id: String): User
 }
 
-type Mutation{
-  modifyAccounts(id:String, code: String, amount: Float, isIncrease: Boolean): Accounts
+type Mutation {
+  modifyAccounts (id:String, code: String, amount: Float, isIncrease: Boolean): Accounts
 }
 
-type Subscription{
-  accountsModified(userId: ID!): Accounts
+type Subscription {
+  accountsModified (userId: ID!): Accounts
 }

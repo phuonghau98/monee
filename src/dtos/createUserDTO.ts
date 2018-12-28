@@ -1,4 +1,4 @@
-export class CreateUser{
+export class CreateUserDTO{
   name?: string;
   usn?: string;
   pwd?: string;

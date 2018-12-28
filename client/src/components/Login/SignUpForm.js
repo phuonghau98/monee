@@ -6,7 +6,7 @@ class SignUpForm extends Component {
     super(props)
     this.state = {
       isSigningUp: false,
-      isInvalidSignUp: false,
+      errMessage: '',
       isSuccessful: false
     }
     this.usnNode = ''
@@ -26,7 +26,6 @@ class SignUpForm extends Component {
       isSigningUp: true,
       isInvalidUser: false
     })
-    console.log(this.nameNode.value, this.pwdNode.value, this.usnNode.value)
     this.props.client.mutate({
       mutation: ADD_USER,
       variables: {
@@ -36,27 +35,24 @@ class SignUpForm extends Component {
       }
     })
       .then((res) => {
-        const createdInfo = res.data.createUser
-        if (createdInfo.status === 203) {
-          this.setState({
-            isSuccessful: true,
-            isSigningUp: false
-          })
-          setTimeout(this.props.toLogin, 2000)
-        } else {
-          this.setState({
-            isInvalidSignUp: true,
-            isSigningUp: false
-          })
-        }
+        this.setState({
+          isSuccessful: true,
+          isSigningUp: false
+        })
+        setTimeout(this.props.toLogin, 2000)
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        this.setState({
+          errMessage: error.graphQLErrors[0].message.message,
+          isSigningUp: false
+        })
+      })
   }
   render () {
     return (
       <div>
         <form onSubmit={this.handleSignUpSubmit}>
-          <button className='backToLogin' onClick={this.props.toLogin}><i class='fas fa-caret-square-left' /> Back to login</button>
+          <button className='backToLogin' onClick={this.props.toLogin}><i className='fas fa-caret-square-left' /> Back to login</button>
           <div className='login-title'>SIGN UP</div>
           <label htmlFor='SignName' style={{ textAlign: 'initial' }}>Name</label>
           <input ref={node => (this.nameNode = node)} autoComplete='off' type='text' autoCorrect='off' id='SignName' maxLength={20} /><br />
@@ -64,8 +60,8 @@ class SignUpForm extends Component {
           <input ref={node => (this.usnNode = node)} id='SignUsername' autoComplete='off' type='text' spellCheck='false' autoCorrect='off' maxLength={20} /><br />
           <label htmlFor='SignPassword'>Password</label>
           <input ref={node => (this.pwdNode = node)} autoComplete='off' autoCorrect='off' type='password' id='SignPassword' maxLength={20} /><br />
-          {this.state.isInvalidSignUp && <p className='notify invalid'>Your information is invalid</p>}
-          {this.state.isSuccessful && <p className='notify success'>Welcome to MONEE! <br>Redirecting to login...</br></p>}
+          {this.state.errMessage !== '' && <p className='notify invalid'>{this.state.errMessage}</p>}
+          {this.state.isSuccessful && <p className='notify success'>Welcome to MONEE! Redirecting to login...</p>}
           <button type='submit' className='login-btn'>{this.state.isSigningUp ? <span><i className='fas fa-circle-notch fa-spin' /> Signing up</span> : 'Sign up' }</button>
         </form>
         <p style={{ color: 'purple' }} >By registering an account means that you have agreed with our policies</p>

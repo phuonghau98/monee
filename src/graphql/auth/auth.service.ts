@@ -1,45 +1,36 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUser } from './dtos/createUser.dto';
+import { Injectable, NotAcceptableException, UnauthorizedException } from '@nestjs/common';
+import { CreateUserDTO } from '../../dtos/createUserDTO';
 import { DatabaseUserService } from '../../database/users.service';
-import { SECRET_CODE } from 'env';
-const bcrypt = require('bcrypt')
+import { DatabaseExtraUserService } from '../../database/user.extraService';
+import { LoginInfoDTO } from '../../dtos/LoginInfoDTO';
+import { AuthExtraService } from './auth.extraService';
 const jwt = require('jsonwebtoken')
 
 @Injectable()
 export class GQLAuthService {
   constructor(
-    private readonly databaseUserService: DatabaseUserService
+    private readonly dbUserService: DatabaseUserService,
+    private readonly dbExUserService: DatabaseExtraUserService,
+    private readonly AuthExtraService: AuthExtraService
   ) { }
   
-  async createUser(user: CreateUser) {
-    return await this.databaseUserService.createUser(user)
+  async createUser (user: CreateUserDTO) {
+    if (await this.dbExUserService.isUsnExist(user.usn) === false && this.dbExUserService.isInfoValid(user)) {
+      const cryptedPwd = await this.dbExUserService.encryptPwd(user.pwd)
+      return await this.dbUserService.createUser({...user, pwd: cryptedPwd})
+    } else throw new NotAcceptableException('Your informations dont meet the requirements')
   }
 
-  async login (logInfo) {
-    const invalidCaseResponse = {
-      token: '',
-      status: 403
-    }
-    const user = await this.databaseUserService.getUserByUsername(logInfo.usn)
-    if (user === null ) return invalidCaseResponse
-    else {
-      const isPwdMatched = await bcrypt.compare(logInfo.pwd, user.pwd)
-      if(isPwdMatched){
-        const generatedToken = await jwt.sign({
-          userId: user.id,
-          userUsn: user.usn
-        }, SECRET_CODE, {
-          expiresIn: '1h'
-        })
+  async login (logInfo: LoginInfoDTO) {
+    if (await this.dbExUserService.isUsnExist(logInfo.usn)) {
+      const searchedUser = await this.dbUserService.getUserByUsername(logInfo.usn)
 
-        const authenticatedSucess = {
-          token: generatedToken,
-          id: user.id,
-          status: 202
+      if (await this.AuthExtraService.isPwdsIdentical(logInfo.pwd, searchedUser.pwd)) {
+        return await {
+          token: await this.AuthExtraService.generateToken(searchedUser),
+          id: searchedUser.id
         }
-        return await authenticatedSucess
-      }
-    }
-    return invalidCaseResponse
+      }  else throw new NotAcceptableException('Invalid User')
+    } else throw new UnauthorizedException('Invalid User')
   }
 }

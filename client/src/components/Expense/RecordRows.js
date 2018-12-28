@@ -9,6 +9,7 @@ class RecordRows extends Component {
   subscribeToNewRecords () {
     this.props.subscribeFunc({
       document: RECORDS_SUBSCRIPTION,
+      variables: { userId: window.localStorage.getItem('id') },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev
         const newRecord = subscriptionData.data.recordCreated
@@ -20,7 +21,7 @@ class RecordRows extends Component {
     return (
       <div>
         {this.props.data.records.map((record) => {
-          return <ExpenseDetail key={record.id} tag={record.tag} payMethod={record.method} description={record.description} date={record.date} amount={record.amount} />
+          return <ExpenseDetail recordId={record.id} key={record.id} tag={record.tag} payMethod={record.method} description={record.description} date={record.date} amount={record.amount} />
         })}
       </div>
     )

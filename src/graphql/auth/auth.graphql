@@ -1,7 +1,6 @@
 type AuthenInfo {
   token: String,
-  id: ID,
-  status: Int
+  id: ID
 }
 
 type Query{

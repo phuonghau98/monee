@@ -3,7 +3,7 @@ import Menu from './Menu/Menu'
 import Main from './Main'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Statistics from './Menu/Statistics'
-import Setting from './Menu/Settings'
+import Setting from './Menu/Setting/Settings'
 import Plans from './Menu/Plans'
 
 class App extends Component {

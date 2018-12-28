@@ -6,7 +6,7 @@ class LoginForm extends Component {
     super(props)
     this.state = {
       isLogging: false,
-      isInvalidUser: false
+      errMessage: ''
     }
     this.usnNode = ''
     this.pwdNode = ''
@@ -32,14 +32,15 @@ class LoginForm extends Component {
       }
     }).then(async (res) => {
       const authInfo = res.data.authentication
-      if (authInfo.status === 202) {
-        this.setState({ isLogging: false })
-        window.localStorage.setItem('token', authInfo.token)
-        window.localStorage.setItem('id', authInfo.id)
-        window.location.href = ''
-      } else {
-        this.setState({ isInvalidUser: true, isLogging: false })
-      }
+      this.setState({ isLogging: false })
+      window.localStorage.setItem('token', authInfo.token)
+      window.localStorage.setItem('id', authInfo.id)
+      window.location.href = ''
+    }).catch((error) => {
+      this.setState({
+        errMessage: error.graphQLErrors[0].message.message,
+        isLogging: false
+      })
     })
   }
 
@@ -52,7 +53,7 @@ class LoginForm extends Component {
           <input ref={node => (this.usnNode = node)} id='logUsername' autoComplete='off' type='text' spellCheck='false' autoCorrect='off' maxLength={20} /><br />
           <label htmlFor='pwd'>Password</label>
           <input ref={node => (this.pwdNode = node)} id='logPassword' autoComplete='off' autoCorrect='off' spellCheck='false  ' type='password' maxLength={20} /><br />
-          {this.state.isInvalidUser && <p className='notify invalid'>Your account is invalid</p>}
+          {this.state.isInvalidUser !== '' ? <p className='notify invalid'>{this.state.errMessage}</p> : null}
           <button type='submit' className='login-btn'>{this.state.isLogging ? <span><i className='fas fa-circle-notch fa-spin' /> Logging in</span> : 'Log in' }</button>
         </form>
         <button style={{ color: 'blue' }} onClick={this.props.toSignUp} >Haven't account yet? Register now!</button>

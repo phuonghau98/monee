@@ -1,11 +1,12 @@
-import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql'
 import { UserService } from './user.service';
-import { Inject, UseGuards } from '@nestjs/common';
-import { PubSub } from 'graphql-subscriptions';
-import { AuthGuard } from '../../auth/auth.guard';
+import { Inject, UseGuards } from '@nestjs/common'
+import { PubSub } from 'graphql-subscriptions'
+import { AuthGuard } from '../../guards/authorization/auth.guard'
+import { withFilter } from 'apollo-server'
 
 @Resolver('User')
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
@@ -13,22 +14,23 @@ export class UserResolver {
   ) { }
 
   @Query()
-  async getUser(@Args('id') id: string) {
+  async getUser (@Args('id') id: string) {
     return await this.userService.getUser(id)
   }
 
   @Mutation()
-  async modifyAccounts(@Args('id') id, @Args('code') code, @Args('amount') amount, @Args('isIncrease') isIncrease){
+  async modifyAccounts (@Args('id') id, @Args('code') code, @Args('amount') amount, @Args('isIncrease') isIncrease) {
     const accountsModified = await this.userService.modifyAccounts(id, code, amount, isIncrease)
-    this.pubSub.publish('accountsModified', { accountsModified : accountsModified.accounts });
+    this.pubSub.publish('accountsModified', { accountsModified : accountsModified.accounts, userId: accountsModified.id });
     return accountsModified
   }
 
   @Subscription('accountsModified')
-  accountsModified(){
+  accountsModified () {
     return {
-      subscribe: () => this.pubSub.asyncIterator('accountsModified')
+      subscribe: withFilter(() => this.pubSub.asyncIterator('accountsModified'), (payload, variables) => {
+        return payload.userId === variables.userId
+      })
     }
   }
-
 }

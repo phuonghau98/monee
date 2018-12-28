@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const RECORDS_SUBSCRIPTION = gql`
-subscription{
-  recordCreated{
+subscription recordCreated($userId: ID!){
+  recordCreated(userId: $userId){
     id
     tag
     date

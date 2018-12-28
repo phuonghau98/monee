@@ -31,8 +31,9 @@ type Query{
 type Mutation{
   editDescription(recordId: ID, userId: ID): Record
   createRecord(record: InputRecord): Record
+  deleteRecord(recordId: ID): Record
 }
 
 type Subscription{
-  recordCreated: Record
+  recordCreated(userId: ID): Record
 }

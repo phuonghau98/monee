@@ -1,10 +1,13 @@
-import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql';
-import { RecordService } from './record.service';
+import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql'
+import { RecordService } from './record.service'
 import { PubSub } from 'graphql-subscriptions'
-import { Inject, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '../../auth/auth.guard';
+import { Inject, UseGuards } from '@nestjs/common'
+import { AuthGuard } from '../../guards/authorization/auth.guard'
+import { withFilter } from 'apollo-server'
+
 
 @Resolver('Record')
+// @UseGuards(AuthGuard)
 export class RecordResolver {
 
   constructor(
@@ -26,16 +29,23 @@ export class RecordResolver {
     const createdRecord = await this.recordService.createRecord(record);
     const accountsModified = await this.recordService.modifyAccounts(record.belongsTo, record.method, record.amount, false)
     
-    this.pubSub.publish('accountsModified', { accountsModified : accountsModified.accounts });
+    this.pubSub.publish('accountsModified', { accountsModified : accountsModified.accounts, userId: record.belongsTo });
     this.pubSub.publish('recordCreated', { recordCreated : createdRecord });
-    
+
     return createdRecord
   }
 
+  @Mutation()
+  async deleteRecord(@Args('recordId') recordId) {
+    return await this.recordService.deleteRecordById(recordId)
+  }
+  
   @Subscription('recordCreated')
   recordCreated(){
     return {
-      subscribe: () => this.pubSub.asyncIterator('recordCreated')
+      subscribe: withFilter(() => this.pubSub.asyncIterator('recordCreated'), (payload, variables) => {
+        return payload.recordCreated.belongsTo === variables.userId
+      })
     }
   }
   

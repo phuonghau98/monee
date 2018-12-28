@@ -1,7 +1,7 @@
 export class CreateUserDto {
-    name?: string;
-    usn?: string;
-    pwd?: string;
+    name?: string
+    usn?: string
+    pwd?: string
 }
 
 export class InputRecord {

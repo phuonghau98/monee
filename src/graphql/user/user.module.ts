@@ -3,8 +3,8 @@ import { UserService } from './user.service';
 import { UserResolver } from './user.resolver';
 import { pubSubProvider } from '../PubSubProvider'
 import { DatabaseModule } from '../../database/database.module';
-import { AuthGuard } from '../../auth/auth.guard';
-import { AuthModule } from '../../auth/auth.module';
+import { AuthGuard } from '../../guards/authorization/auth.guard';
+import { AuthModule } from '../../guards/authorization/auth.module';
 
 @Module({
   imports: [

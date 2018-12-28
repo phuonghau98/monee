@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { RecordResolver } from './record.resolver';
+import { Test, TestingModule } from '@nestjs/testing'
+import { RecordResolver } from './record.resolver'
 
 describe('RecordResolver', () => {
   let resolver: RecordResolver;

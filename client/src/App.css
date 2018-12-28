@@ -179,7 +179,10 @@ body{
 .expense-detail.input input{
   width: 100%;
 }
-
+.expense-delete{
+  color: red;
+  cursor: pointer;
+}
 .expense-description.input textarea{
   width: 60%;
   height: 60px;
@@ -360,10 +363,30 @@ body{
   position: absolute;
   left: 50%;
   width: 100%;
-  bottom: 40px;
+  bottom: 22px;
   transform: translateX(-50%);
 }
 .backToLogin{
   position: absolute;
   left: -100px;
+}
+
+/* SETTING CSS */
+
+.changePwd{
+  padding-left: 30px;
+}
+
+.changePwd label{
+  display: inline-block !important;
+  height: 33px;
+  width: 180px;
+}
+.changePwd form {
+  width: 50%;
+}
+
+.changePwd form input {
+  float: right;
+  margin: 0;
 }

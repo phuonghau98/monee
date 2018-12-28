@@ -40,7 +40,6 @@ export const GET_AUTHENTICATION = gql`
   query login($usn: String!, $pwd: String!){
     authentication: login(logInfo: {usn: $usn, pwd: $pwd }){
       token
-      status
       id
     }
   }

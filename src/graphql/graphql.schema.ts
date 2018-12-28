@@ -32,7 +32,6 @@ export class Accounts {
 export class AuthenInfo {
     token?: string;
     id?: string;
-    status?: number;
 }
 
 export class Description {
@@ -46,6 +45,8 @@ export abstract class IMutation {
     abstract editDescription(recordId?: string, userId?: string): Record | Promise<Record>;
 
     abstract createRecord(record?: InputRecord): Record | Promise<Record>;
+
+    abstract deleteRecord(recordId?: string): Record | Promise<Record>;
 
     abstract modifyAccounts(id?: string, code?: string, amount?: number, isIncrease?: boolean): Accounts | Promise<Accounts>;
 }
@@ -79,7 +80,7 @@ export class StaticsByTime {
 }
 
 export abstract class ISubscription {
-    abstract recordCreated(): Record | Promise<Record>;
+    abstract recordCreated(userId?: string): Record | Promise<Record>;
 
     abstract accountsModified(userId: string): Accounts | Promise<Accounts>;
 }

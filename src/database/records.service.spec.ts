@@ -1,14 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { RecordService } from './records.service';
+import { Test, TestingModule } from '@nestjs/testing'
+import { DatabaseRecordService } from './records.service'
 
 describe('DatabaseService', () => {
-  let service: RecordService;
+  let service: DatabaseRecordService;
   
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RecordService],
+      providers: [DatabaseRecordService],
     }).compile();
-    service = module.get<RecordService>(RecordService);
+    service = module.get<DatabaseRecordService>(DatabaseRecordService);
   });
   it('should be defined', () => {
     expect(service).toBeDefined();

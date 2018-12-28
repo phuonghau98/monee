@@ -13,7 +13,6 @@ export const ADD_USER = gql`
   mutation createUser($name: String!, $usn: String!, $pwd: String!){
     createUser(user: { name: $name, usn: $usn, pwd: $pwd }){
       id
-      status
     }
   }
 `
@@ -36,6 +35,14 @@ mutation createRecord($belongsTo: ID!, $tag: String!, $method: String!, $descrip
       content
     }
     amount
+  }
+}
+`
+
+export const DELETE_RECORD = gql`
+mutation deleteRecord($recordId: ID) {
+  deleteRecord(recordId: $recordId){
+    id
   }
 }
 `
